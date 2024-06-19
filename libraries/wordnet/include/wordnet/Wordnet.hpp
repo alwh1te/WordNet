@@ -24,7 +24,6 @@ public:
     int edge_count() const;
     void add_edge(int v, int w);
     const std::list<int> &adjacent(int v) const;
-    friend std::ostream &operator<<(std::ostream &os, const Digraph &graph);
 };
 
 class ShortestCommonAncestor {
@@ -47,6 +46,7 @@ public:
     unsigned ancestor_subset(const std::set<unsigned> &subset_a, const std::set<unsigned> &subset_b);
 };
 
+class Nouns;
 class WordNet {
 private:
     std::unordered_map<int, std::vector<std::string>> synset_to_nouns;
@@ -58,6 +58,7 @@ public:
     WordNet(std::istream &synsets, std::istream &hypernyms);
 
     class Nouns {
+        friend class WordNet;
     private:
         std::unordered_set<std::string> nouns;
 
@@ -87,6 +88,7 @@ public:
         };
 
         Nouns(const std::unordered_map<std::string, std::vector<int>> &noun_map);
+        Nouns() = default;
         iterator begin() const;
         iterator end() const;
     };
@@ -95,6 +97,7 @@ public:
     bool is_noun(const std::string &word) const;
     std::string sca(const std::string &noun1, const std::string &noun2) const;
     unsigned distance(const std::string &noun1, const std::string &noun2) const;
+    Nouns nounsClass;
 };
 
 class Outcast {

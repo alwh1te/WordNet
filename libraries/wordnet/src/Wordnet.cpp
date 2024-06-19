@@ -1,6 +1,6 @@
 #include "/Users/alw/CLionProjects/WordNet/libraries/wordnet/include/wordnet/Wordnet.hpp"
-#include <sstream>
 #include <regex>
+#include <sstream>
 
 Digraph::Digraph(int V) : V(V), E(0), adj(V) {}
 
@@ -20,18 +20,6 @@ void Digraph::add_edge(int v, int w) {
 const std::list<int> &Digraph::adjacent(int v) const {
     return adj[v];
 }
-
-std::ostream &operator<<(std::ostream &os, const Digraph &graph) {
-    for (int v = 0; v < graph.V; v++) {
-        os << v << ": ";
-        for (int w: graph.adj[v]) {
-            os << w << " ";
-        }
-        os << std::endl;
-    }
-    return os;
-}
-
 
 ShortestCommonAncestor::BFSResult::BFSResult(int V) : dist(V, std::numeric_limits<int>::max()), edgeTo(V, -1) {}
 
@@ -140,7 +128,6 @@ std::string trimString(std::string str) {
 WordNet::WordNet(std::istream &synsets, std::istream &hypernyms) : G(0) {
     std::string line;
     int max_synset_id = 0;
-
     while (std::getline(synsets, line)) {
         std::stringstream ss(line);
         std::string id_str, synonyms, gloss;
@@ -171,14 +158,15 @@ WordNet::WordNet(std::istream &synsets, std::istream &hypernyms) : G(0) {
         std::string id_str;
         std::getline(ss, id_str, ',');
         try {
-        int id = std::stoi(id_str);
-        std::string hypernym_id_str;
-        while (std::getline(ss, hypernym_id_str, ',')) {
-            int hypernym_id = std::stoi(hypernym_id_str);
-            G.add_edge(id, hypernym_id);
-        }
+            int id = std::stoi(id_str);
+            std::string hypernym_id_str;
+            while (std::getline(ss, hypernym_id_str, ',')) {
+                int hypernym_id = std::stoi(hypernym_id_str);
+                G.add_edge(id, hypernym_id);
+            }
         } catch (...) {}
     }
+    nounsClass = Nouns(noun_to_synsets);
 }
 
 WordNet::Nouns::Nouns(const std::unordered_map<std::string, std::vector<int>> &noun_map) {
@@ -225,7 +213,7 @@ WordNet::Nouns::iterator WordNet::Nouns::end() const {
 }
 
 WordNet::Nouns WordNet::nouns() const {
-    return Nouns(noun_to_synsets);
+    return nounsClass;
 }
 
 bool WordNet::is_noun(const std::string &word) const {
@@ -300,4 +288,3 @@ std::string Outcast::outcast(const std::set<std::string> &nouns) {
 
     return "";
 }
-
