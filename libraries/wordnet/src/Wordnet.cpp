@@ -1,4 +1,4 @@
-#include "/Users/alw/CLionProjects/WordNet/libraries/wordnet/include/wordnet/Wordnet.hpp"
+#include "/libraries/wordnet/include/wordnet/Wordnet.hpp"
 #include <regex>
 #include <sstream>
 
